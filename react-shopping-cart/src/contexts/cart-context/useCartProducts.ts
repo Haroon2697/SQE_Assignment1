@@ -12,10 +12,10 @@ const useCartProducts = () => {
     quantity: number
   ): ICartProduct => {
     if (currentProduct.id === targetProduct.id) {
-      return Object.assign({
+      return {
         ...currentProduct,
-        quantity: currentProduct.quantity + quantity,
-      });
+        quantity: Math.max(0, currentProduct.quantity + quantity),
+      };
     } else {
       return currentProduct;
     }
@@ -58,9 +58,11 @@ const useCartProducts = () => {
   };
 
   const decreaseProductQuantity = (productToDecrease: ICartProduct) => {
-    const updatedProducts = products.map((product: ICartProduct) => {
-      return updateQuantitySafely(product, productToDecrease, -1);
-    });
+    const updatedProducts = products
+      .map((product: ICartProduct) => {
+        return updateQuantitySafely(product, productToDecrease, -1);
+      })
+      .filter((product: ICartProduct) => product.quantity > 0);
 
     setProducts(updatedProducts);
     updateCartTotal(updatedProducts);

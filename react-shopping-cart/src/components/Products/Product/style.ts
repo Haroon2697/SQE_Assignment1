@@ -59,7 +59,16 @@ export const Container = styled.div<IContainer>`
 
     @media only screen and (min-width: ${({ theme: { breakpoints } }) =>
         breakpoints.tablet}) {
+      height: 300px;
+    }
+
+    @media only screen and (min-width: 900px) {
       height: 320px;
+    }
+
+    @media only screen and (min-width: ${({ theme: { breakpoints } }) =>
+        breakpoints.desktop}) {
+      height: 350px;
     }
   }
 
@@ -126,4 +135,48 @@ export const Val = styled.p`
 export const Installment = styled.p`
   margin: 0;
   color: #9c9b9b;
+`;
+
+export const SizeContainer = styled.div`
+  margin: 10px 0;
+  text-align: left;
+`;
+
+export const SizeLabel = styled.label`
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 500;
+`;
+
+interface ISizeSelect {
+  hasError: boolean;
+}
+
+export const SizeSelect = styled.select<ISizeSelect>`
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid ${({ hasError }) => (hasError ? '#e74c3c' : '#ddd')};
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.secondary};
+  }
+
+  &:hover {
+    border-color: ${({ hasError }) => (hasError ? '#e74c3c' : '#bbb')};
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 0.8em;
+  margin-top: 4px;
+  font-weight: 500;
 `;

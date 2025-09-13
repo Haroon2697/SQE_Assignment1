@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, useState } from 'react';
 
 import formatPrice from 'utils/formatPrice';
 import { IProduct } from 'models';
@@ -13,6 +13,8 @@ interface IProps {
 
 const Product = ({ product }: IProps) => {
   const { openCart, addProduct } = useCart();
+  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [showSizeError, setShowSizeError] = useState<boolean>(false);
   const {
     sku,
     title,
@@ -21,6 +23,7 @@ const Product = ({ product }: IProps) => {
     currencyId,
     currencyFormat,
     isFreeShipping,
+    availableSizes,
   } = product;
 
   const formattedPrice = formatPrice(price, currencyId);
@@ -41,15 +44,32 @@ const Product = ({ product }: IProps) => {
   }
 
   const handleAddProduct = () => {
-    addProduct({ ...product, quantity: 1 });
+    if (!selectedSize) {
+      setShowSizeError(true);
+      return;
+    }
+    
+    setShowSizeError(false);
+    addProduct({ ...product, quantity: 1, selectedSize });
     openCart();
   };
 
   const handleAddProductWhenEnter = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.code === 'Space') {
-      addProduct({ ...product, quantity: 1 });
+      if (!selectedSize) {
+        setShowSizeError(true);
+        return;
+      }
+      
+      setShowSizeError(false);
+      addProduct({ ...product, quantity: 1, selectedSize });
       openCart();
     }
+  };
+
+  const handleSizeChange = (size: string) => {
+    setSelectedSize(size);
+    setShowSizeError(false);
   };
 
   return (
@@ -57,6 +77,25 @@ const Product = ({ product }: IProps) => {
       {isFreeShipping && <S.Stopper>Free shipping</S.Stopper>}
       <S.Image alt={title} />
       <S.Title>{title}</S.Title>
+      
+      {/* Size Selection */}
+      <S.SizeContainer>
+        <S.SizeLabel>Size:</S.SizeLabel>
+        <S.SizeSelect 
+          value={selectedSize} 
+          onChange={(e) => handleSizeChange(e.target.value)}
+          hasError={showSizeError}
+        >
+          <option value="">Select Size</option>
+          {availableSizes.map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </S.SizeSelect>
+        {showSizeError && <S.ErrorMessage>Please select a size</S.ErrorMessage>}
+      </S.SizeContainer>
+
       <S.Price>
         <S.Val>
           <small>{currencyFormat}</small>
