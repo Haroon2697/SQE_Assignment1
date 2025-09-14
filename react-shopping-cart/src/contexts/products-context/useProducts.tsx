@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useProductsContext } from './ProductsContextProvider';
 import { IProduct } from 'models';
@@ -14,18 +14,40 @@ const useProducts = () => {
     setFilters,
   } = useProductsContext();
 
+  // Use ref to track if component is mounted to prevent memory leaks
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const fetchProducts = useCallback(() => {
+    if (!isMountedRef.current) return;
+    
     setIsFetching(true);
     getProducts().then((products: IProduct[]) => {
-      setIsFetching(false);
-      setProducts(products);
+      if (isMountedRef.current) {
+        setIsFetching(false);
+        setProducts(products);
+      }
+    }).catch((error) => {
+      if (isMountedRef.current) {
+        setIsFetching(false);
+        console.error('Error fetching products:', error);
+      }
     });
   }, [setIsFetching, setProducts]);
 
-  const filterProducts = (filters: string[]) => {
+  const filterProducts = useCallback((filters: string[]) => {
+    if (!isMountedRef.current) return;
+    
     setIsFetching(true);
 
     getProducts().then((products: IProduct[]) => {
+      if (!isMountedRef.current) return;
+      
       setIsFetching(false);
       let filteredProducts;
 
@@ -41,8 +63,13 @@ const useProducts = () => {
 
       setFilters(filters);
       setProducts(filteredProducts);
+    }).catch((error) => {
+      if (isMountedRef.current) {
+        setIsFetching(false);
+        console.error('Error filtering products:', error);
+      }
     });
-  };
+  }, [setIsFetching, setProducts, setFilters]);
 
   return {
     isFetching,
