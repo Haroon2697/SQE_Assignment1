@@ -30,6 +30,7 @@ const mockProduct: IProduct = {
 };
 
 const mockCartFunctions = {
+  isOpen: false,
   openCart: jest.fn(),
   closeCart: jest.fn(),
   addProduct: jest.fn(),

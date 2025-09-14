@@ -19,8 +19,15 @@ export const CartButton = styled.button`
     outline: 3px solid ${({ theme }) => theme.colors.secondary};
   }
 
+  transition: all 0.2s ease-in-out;
+
   &:hover {
     filter: brightness(85%);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 `;
 
@@ -37,7 +44,7 @@ export const Container = styled.div<IContainer>`
   box-sizing: border-box;
   z-index: 99;
 
-  transition: right 0.2s;
+  transition: right 0.3s ease-in-out;
 
   ${CartButton} {
     left: ${({ isOpen }) => (isOpen ? '0' : '-50px')};
@@ -88,11 +95,37 @@ export const CartQuantity = styled.div`
   position: absolute;
   bottom: 0;
   right: 5px;
+  transition: all 0.3s ease-in-out;
+  animation: pulse 2s infinite;
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 `;
 
 export const CartContent = styled.div`
   height: 100%;
   overflow-y: scroll;
+  animation: slideInFromRight 0.3s ease-in-out;
+
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 
   /* MAC scrollbar para desktop*/
   @media screen and (min-width: 640px) {
@@ -158,8 +191,10 @@ export const CheckoutButton = styled.button`
   margin-top: 40px;
   cursor: pointer;
   outline: none;
+  position: relative;
+  overflow: hidden;
 
-  transition: background-color 0.2s;
+  transition: all 0.3s ease-in-out;
 
   &:focus-visible {
     outline: 3px solid ${({ theme }) => theme.colors.secondary};
@@ -167,6 +202,27 @@ export const CheckoutButton = styled.button`
 
   &:hover {
     background-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover::before {
+    left: 100%;
   }
 `;
 
