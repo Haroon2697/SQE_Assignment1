@@ -1,20 +1,74 @@
-import { renderWithThemeProvider } from 'utils/test/test-utils';
-import { mockProducts } from 'utils/test/mocks';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 
-import { CartProvider } from 'contexts/cart-context';
-import Products from '.';
+import Products from './Products';
+import { IProduct } from 'models';
 
-describe('[components] - Products', () => {
-  const setup = (props = {}) => {
-    return renderWithThemeProvider(
-      <CartProvider>
-        <Products products={mockProducts} {...props} />
-      </CartProvider>
-    );
+const mockProducts: IProduct[] = [
+  {
+    id: 1,
+    sku: 12345,
+    title: 'Product 1',
+    description: 'First product',
+    availableSizes: ['S', 'M'],
+    style: 'style1',
+    price: 29.99,
+    installments: 3,
+    currencyId: 'USD',
+    currencyFormat: '$',
+    isFreeShipping: true,
+  },
+  {
+    id: 2,
+    sku: 67890,
+    title: 'Product 2',
+    description: 'Second product',
+    availableSizes: ['M', 'L'],
+    style: 'style2',
+    price: 39.99,
+    installments: 0,
+    currencyId: 'USD',
+    currencyFormat: '$',
+    isFreeShipping: false,
+  },
+];
+
+// Mock the Product component
+jest.mock('./Product', () => {
+  return function MockProduct({ product }: { product: IProduct }) {
+    return <div data-testid={`product-${product.id}`}>{product.title}</div>;
   };
+});
 
-  test('should render correctly', () => {
-    const view = setup();
-    expect(view).toMatchSnapshot();
+describe('Products Component', () => {
+  test('renders products grid with correct number of products', () => {
+    render(<Products products={mockProducts} />);
+    
+    expect(screen.getByTestId('product-1')).toBeInTheDocument();
+    expect(screen.getByTestId('product-2')).toBeInTheDocument();
+  });
+
+  test('renders empty state when no products provided', () => {
+    render(<Products products={[]} />);
+    
+    expect(screen.queryByTestId('product-1')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('product-2')).not.toBeInTheDocument();
+  });
+
+  test('renders empty state when products is undefined', () => {
+    render(<Products products={undefined as any} />);
+    
+    expect(screen.queryByTestId('product-1')).not.toBeInTheDocument();
+  });
+
+  test('applies correct CSS classes for responsive grid', () => {
+    const { container } = render(<Products products={mockProducts} />);
+    const gridContainer = container.firstChild as HTMLElement;
+    
+    expect(gridContainer).toHaveStyle({
+      display: 'grid',
+      'grid-template-columns': 'repeat(1, 1fr)',
+    });
   });
 });
