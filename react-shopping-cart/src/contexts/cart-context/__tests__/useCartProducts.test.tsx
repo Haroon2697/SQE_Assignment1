@@ -44,7 +44,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext();
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
@@ -64,7 +64,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext([mockCartProduct]);
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
@@ -86,7 +86,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext([mockCartProduct]);
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
@@ -103,7 +103,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext([mockCartProducts[0]]);
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
@@ -121,7 +121,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext([mockCartProduct]);
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
@@ -139,7 +139,7 @@ describe('[contexts] - cart-context', () => {
         setupMockUseContext([mockCartProduct]);
 
         const mockUpdateCartTotal = jest.fn();
-        useCartTotalModule.default = jest.fn().mockImplementation(() => ({
+        (useCartTotalModule as any).default = jest.fn().mockImplementation(() => ({
           total: {},
           updateCartTotal: mockUpdateCartTotal,
         }));
